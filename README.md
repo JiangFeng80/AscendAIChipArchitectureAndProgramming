@@ -1,2 +1,2 @@
 # AscendAIChipArchitectureAndProgramming
-for the boot samples 《Ascend AI Chip Architecture and Programming》
+for the samples of 《Ascend AI Chip Architecture and Programming》
