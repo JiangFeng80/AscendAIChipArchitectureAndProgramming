@@ -1,3 +1,0 @@
-size=4
-dataPath=./output/out0.data
-dtype=1
