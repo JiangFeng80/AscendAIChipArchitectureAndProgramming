@@ -1,50 +1,15 @@
-**Interface**
+步骤1：插件编译
 
-```python
-def custom_Reduction(
-    shape, 
-    dtype, 
-    axis, 
-    op, 
-    coeff,
-    kernel_name="cce_reductionLayer",
-    need_build=False, 
-    need_print=False):
-```
+1）修改 custom_xxx/plugin/ 的 Makefile 文件中的 DDK 路径（位于第12行）。
 
-**Description**
+2）修改 custom_xxx/omg_verify/env_omg.sh 的 DDK_PATH，并执行 source env_omg.sh。
 
-Reduce the input tensor on a certain axis, and scale output with coeff.
+3）在 custom_xxx/plugin/ 目录下执行 make clean; make。
 
-Suppose we have an n-axis bottom Blob with shape:
+步骤2：OMG（模型转换）
 
-(d0, d1, d2, ..., d(m-1), dm, d(m+1), ..., d(n-1))
+1）修改 custom_xxx/omg_verify/env_omg.sh 的 DDK_PATH。
 
-If axis == m, the output Blob will have shape
+2）修改 omg.sh 的 DDK_PATH 与 ddk_version 参数。
 
-(d0, d1, d2, ..., d(m-1))
-
-And the ReductionOp operation is performed (d0 * d1 * d2 * ... * d(m-1)) times, each including (dm * d(m+1) * ... * d(n-1)) individual data.
-
-If axis == 0 (the default), the output Blob always has the empty shape (count 1), performing reduction across the entire input. Often useful for creating new loss functions.
-
-**Args:**
-
-- shape : input tensor's shape
-- dtype : input tensor's dtype, support:`float16,float32`
-- axis : the first axis to reduce
-- op : can only be one of "SUM, ASUM (sum of abs), SUMSQ (sum of sqr), MEAN"
-- coeff : scale for output
-- kernel_name: op's kernel func name, optional
-- need_build: whether build CCEC kernel, default is `False`, optional
-- need_print: whether print IR, default is `False`, optional
-
-**Returns:**
-
-No returns, generate op's .o file and .json file(describe op's platform) in `./kernel_meta`
-
-**Notice**
-
-1. Before plugin compilation, please change the ddk path of the file Makefile on line 12. 
-2. Please change the ddk path of env_omg.sh and omg.sh in the omg_verify folder before OMG.
-3. In order to get the NPU model(.om), please run "source env_omg.sh" in the omg_verify folder, and then "make clean;make" in the plugin folder, and "bash omg.sh" in the omg_verify folder.
+3）在 custom_xxx/omg_verify/ 目录下依次执行 source env_omg.sh 与 bash omg.sh。
